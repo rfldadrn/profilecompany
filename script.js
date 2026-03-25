@@ -900,10 +900,12 @@ let currentFilter = 'Semua';
 // Initialize Gallery
 function initGallery() {
     if (typeof content === 'undefined' || !content.gallery) {
-        console.warn('Gallery content not found');
+        console.warn('Gallery content not found, retrying in 100ms...');
+        setTimeout(initGallery, 100);
         return;
     }
     
+    console.log('Gallery initializing with', content.gallery.items.length, 'items');
     renderGalleryFilters();
     renderGallery(content.gallery.items);
     initGalleryModal();
@@ -942,7 +944,10 @@ function renderGalleryFilters() {
 // Render Gallery Items
 function renderGallery(items) {
     const galleryGrid = document.getElementById('galleryGrid');
-    if (!galleryGrid) return;
+    if (!galleryGrid) {
+        console.error('Gallery grid element not found!');
+        return;
+    }
     
     // Clear grid
     galleryGrid.innerHTML = '';
@@ -951,6 +956,8 @@ function renderGallery(items) {
     const filteredItems = currentFilter === 'Semua' 
         ? items 
         : items.filter(item => item.category === currentFilter);
+    
+    console.log('Rendering', filteredItems.length, 'items for category:', currentFilter);
     
     // Add stagger delay
     let delay = 0;
@@ -962,6 +969,13 @@ function renderGallery(items) {
         delay += 50; // Stagger animation
     });
     
+    // Force repaint for mobile
+    if (window.innerWidth <= 768) {
+        setTimeout(() => {
+            galleryGrid.style.display = 'grid';
+        }, 10);
+    }
+    
     // If no items found
     if (filteredItems.length === 0) {
         galleryGrid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 60px 20px; color: var(--text-tertiary);">Tidak ada item dalam kategori ini</p>';
@@ -972,11 +986,14 @@ function renderGallery(items) {
 function createGalleryItem(item, delay = 0) {
     const galleryItem = document.createElement('div');
     galleryItem.className = 'gallery-item';
-    galleryItem.style.animationDelay = `${delay}ms`;
+    
+    // Reduce delay for mobile devices
+    const isMobile = window.innerWidth <= 768;
+    galleryItem.style.animationDelay = `${isMobile ? delay / 2 : delay}ms`;
     
     galleryItem.innerHTML = `
         <div class="gallery-image">
-            <img src="${item.image}" alt="${item.title}" loading="lazy">
+            <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x500?text=Image+Not+Found'">
             <div class="gallery-overlay">
                 <div class="gallery-info">
                     <span class="gallery-category">${item.category}</span>

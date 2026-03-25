@@ -122,6 +122,125 @@
 }
 
 /* ===================================
+   Force Light Mode (Override Dark Mode)
+   =========================== */
+:root {
+    color-scheme: light;
+}
+
+html, body {
+    color-scheme: light !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Force all elements to use light mode colors */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: light;
+        --bg-white: #ffffff;
+        --bg-subtle: #f8fafc;
+        --bg-soft: #f1f5f9;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-tertiary: #94a3b8;
+        --text-white: #ffffff;
+    }
+    
+    html, body {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
+    
+    /* Force white backgrounds on major sections (except community-stats) */
+    section:not(.community-stats) {
+        background-color: var(--bg-white) !important;
+    }
+    
+    .hero,
+    .about,
+    .services,
+    .testimonials,
+    .gallery {
+        background-color: var(--bg-white) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    /* CTA Section with gradient background */
+    .cta-section {
+        background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .cta-title,
+    .cta-text {
+        color: #0f172a !important;
+    }
+    
+    /* Keep community-stats with gradient background and white text */
+    .community-stats {
+        background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%) !important;
+        color: #ffffff !important;
+    }
+    
+    .community-stats .section-title,
+    .community-stats .section-description,
+    .community-stats .stat-number,
+    .community-stats .stat-label {
+        color: #ffffff !important;
+    }
+    
+    /* Footer stays dark */
+    .footer {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-white) !important;
+    }
+    
+    .footer * {
+        color: inherit !important;
+    }
+    
+    /* Force card backgrounds */
+    .service-card,
+    .testimonial-card,
+    .gallery-item,
+    .stat-box {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
+    
+    /* Force input and button colors */
+    input,
+    textarea,
+    select,
+    button {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+    }
+    
+    /* Keep navbar light */
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #0f172a !important;
+    }
+    
+    .nav-link,
+    .logo-text {
+        color: #0f172a !important;
+    }
+    
+    .navbar.scrolled {
+        background-color: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(12px);
+    }
+    
+    /* Force all text to be dark */
+    p, h1, h2, h3, h4, h5, h6, span, a, li, div {
+        color: inherit;
+    }
+}
+
+/* ===================================
    Reset & Base Styles
    =================================== */
 * {
@@ -2137,9 +2256,18 @@ img {
 /* Gallery Grid */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 32px;
     margin-top: 48px;
+    min-height: 200px;
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 24px;
+    }
 }
 
 /* Gallery Item */
@@ -2416,15 +2544,40 @@ img {
    =========================== */
 @media (max-width: 1024px) {
     .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
     }
 }
 
 @media (max-width: 768px) {
     .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    
+    .gallery-item {
+        border-radius: var(--radius-medium);
+    }
+    
+    .gallery-item:hover {
+        transform: translateY(0); /* Disable hover effect on mobile */
+    }
+    
+    .gallery-image {
+        padding-top: 100%; /* Square for better mobile display */
+    }
+    
+    .gallery-overlay {
+        padding: 12px;
+    }
+    
+    .gallery-category {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    
+    .gallery-title {
+        font-size: 14px;
     }
     
     .filter-btn {
@@ -2451,8 +2604,22 @@ img {
 
 @media (max-width: 480px) {
     .gallery-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 32px;
+        display: grid !important;
+    }
+    
+    .gallery-item {
+        border-radius: var(--radius-small);
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .gallery-item:hover {
+        transform: none;
+        box-shadow: var(--shadow-small);
     }
     
     .gallery-filters {
@@ -2460,12 +2627,25 @@ img {
     }
     
     .filter-btn {
-        padding: 8px 16px;
-        font-size: 12px;
+        padding: 6px 12px;
+        font-size: 11px;
     }
     
     .gallery-title {
-        font-size: 16px;
+        font-size: 12px;
+    }
+    
+    .gallery-category {
+        font-size: 9px;
+        padding: 2px 6px;
+    }
+    
+    .gallery-overlay {
+        padding: 8px;
+    }
+    
+    .gallery-image {
+        padding-top: 100%; /* Square aspect ratio for mobile */
     }
     
     .modal-image {
@@ -2475,6 +2655,18 @@ img {
     .modal-title {
         font-size: 16px;
         padding: 12px 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 11px;
     }
 }
 
