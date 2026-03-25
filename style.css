@@ -498,7 +498,7 @@ ul {
     overflow: hidden;
     background: 
         /* linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), */
-        url('../src/image/bg.png') no-repeat center center;
+        url('./src/image/bg.png') no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
 }
@@ -737,7 +737,7 @@ section {
 }
 
 .image-placeholder {
-    background: url('../src/image/dubus.png') no-repeat center center;
+    background: url('./src/image/dubus.png') no-repeat center center;
     background-size: cover;
     border-radius: var(--radius-3xl);
     height: 500px;
